@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Attendance Records</title></head>
+<body>
+<h2>Attendance Records</h2>
+<table border="1" cellpadding="6">
+<tr><th>User</th><th>Date</th><th>Time</th></tr>
+{% for r in rows %}
+<tr>
+<td>{{r[0]}}</td><td>{{r[1]}}</td><td>{{r[2]}}</td>
+</tr>
+{% endfor %}
+</table>
+</body>
+</html>

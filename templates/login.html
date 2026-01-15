@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Face Login</title>
+<style>
+body {
+    background:#f3f5f9;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    font-family:Arial;
+}
+.card {
+    background:white;
+    padding:30px;
+    width:350px;
+    border-radius:10px;
+    text-align:center;
+    box-shadow:0px 4px 10px rgba(0,0,0,0.15);
+}
+button {
+    padding:12px;
+    width:100%;
+    border:none;
+    border-radius:5px;
+    background:#4a70e7;
+    color:white;
+    font-size:17px;
+}
+#msg{ margin-top:12px; color:#555; }
+</style>
+</head>
+<body>
+<div class="card">
+<h2>Scan Face to Login</h2>
+<button onclick="start()">Start Scan</button>
+<p id="msg"></p>
+</div>
+
+<script>
+async function start() {
+    document.getElementById("msg").innerHTML = "Opening camera...";
+    await fetch("/start_scan", {method:"POST"});
+
+    let timer = setInterval(async ()=>{
+        let res = await fetch("/scan_status");
+        let data = await res.json();
+
+        if(data.running){
+            document.getElementById("msg").innerHTML = "Scanning...";
+        }
+
+        if(data.done){
+            clearInterval(timer);
+            if(data.user !== "unknown"){
+                window.location.href="/login_success?user="+data.user;
+            } else {
+                window.location.href="/login_failed?msg=Unknown face";
+            }
+        }
+    }, 500);
+}
+</script>
+</body>
+</html>

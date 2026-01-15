@@ -7,35 +7,24 @@ if not os.path.exists(KNOWN_DIR):
     os.makedirs(KNOWN_DIR)
 
 name = input("Enter user name: ").strip()
-user_path = os.path.join(KNOWN_DIR, name)
+user_folder = os.path.join(KNOWN_DIR, name)
 
-if not os.path.exists(user_path):
-    os.makedirs(user_path)
+os.makedirs(user_folder, exist_ok=True)
 
 cap = cv2.VideoCapture(0)
 count = 0
 
-print("Look straight at camera and press 'c' to capture. Press 'q' to quit.")
+print("Press 'c' to capture image")
 
-while True:
+while count < 10:
     ret, frame = cap.read()
     cv2.imshow("Register User", frame)
 
-    key = cv2.waitKey(1) & 0xFF
-
-    if key == ord('c'):
+    if cv2.waitKey(1) & 0xFF == ord('c'):
         count += 1
-        img_path = os.path.join(user_path, f"{count}.jpeg")
-        cv2.imwrite(img_path, frame)
-        print(f"Saved: {img_path}")
-
-        if count >= 10:
-            print("Registration complete!")
-            break
-
-    elif key == ord('q'):
-        print("Registration cancelled")
-        break
+        cv2.imwrite(f"{user_folder}/{count}.jpeg", frame)
+        print(f"Captured {count}/10")
 
 cap.release()
 cv2.destroyAllWindows()
+print("Registration completed!")
